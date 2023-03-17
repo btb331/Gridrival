@@ -15,3 +15,7 @@ gridRival:GridRival = gridRivalFactory.getGridRival()
 driver = gridRival.getDriver(937219)
 
 print(driver.totalPoints())
+
+team = gridRival.getTeam(100150)
+
+print(team.totalPoints())
