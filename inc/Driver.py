@@ -1,4 +1,4 @@
-class Team:
+class Driver:
 
     def __init__(self, id, qualiPoints, racePoints) -> None:
         self._id = id
