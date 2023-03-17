@@ -1,7 +1,8 @@
 from inc.http.GridRivalClient import GridRivalClient
 from inc.Factories.DriverFactory import DriverFactory
-from inc.Factories.TeamFactory import Team
+from inc.Factories.TeamFactory import TeamFactory
 from inc.Drivers import Drivers
+from inc.Teams import Teams
 from GridRival import GridRival
 
 class GridRivalFactory:
@@ -10,6 +11,7 @@ class GridRivalFactory:
     def __init__(self, client: GridRivalClient) -> None:
         self.client = client
         self.drivers: Drivers = Drivers()
+        self.teams: Teams = Teams()
         self.raceIds = []
         self.nextRaceIndex:int
         pass
@@ -18,6 +20,7 @@ class GridRivalFactory:
         gameData = self.client.getGameData()
         self.processRaces(gameData['sports']['event_map'])
         self.processDriverData(gameData['elements'])
+        self.processTeamData(gameData['teamData'])
     
     def processDriverData(self, data:dict):
         print("processing drivers...")
@@ -37,7 +40,15 @@ class GridRivalFactory:
                 foundNext = True
         print("success")
 
-  
+    def processTeamData(self, data):
+        print("processing drivers...")
+        for team in data:
+            teamFactory = TeamFactory(team)
+            team = teamFactory.team
+            self.teams.addTeam(team)
+        print("success")    
+
+    
 
     def getGridRival(self):
-        return GridRival(self.drivers, self.raceIds, self.nextRaceIndex)
+        return GridRival(self.drivers, self.teams, self.raceIds, self.nextRaceIndex)
