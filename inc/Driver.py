@@ -18,6 +18,9 @@ class Driver:
     def racePoints(self):
         return self._racePoints
     
+    def roundPoint(self, round):
+        return self.qualiPoints[round] + self.racePoints[round]
+    
     def totalQualiPoints(self):
         return sum(self.qualiPoints)
     

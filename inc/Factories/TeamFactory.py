@@ -19,6 +19,9 @@ class TeamFactory:
                 continue
             self.qualiPoints.append(float(scoreData[1][0]['data'][0]['points']))
             racePoints = 0
+            if 'data' not in scoreData[1][1]:
+                self.racePoints.append(0)
+                continue
             for racePoint in scoreData[1][1]['data']:
                 racePoints = racePoints +  float(racePoint['points'])
             self.racePoints.append(racePoints)
