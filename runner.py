@@ -12,10 +12,19 @@ gridRivalFactory.load()
 
 gridRival:GridRival = gridRivalFactory.getGridRival()
 
-driver = gridRival.getDriver(937219)
+roundScores = gridRival.calculateRoundScore(1)
 
-print(driver.totalPoints())
+orderRoundScores = {k: v for k, v in sorted(roundScores.items(), key=lambda item: item[1], reverse=True)}
 
-team = gridRival.getTeam(100150)
+print("Round score")
+for name in orderRoundScores:
+    print(name, ":",  orderRoundScores[name])
 
-print(team.totalPoints())
+print("")
+totalScores = gridRival.calculateTotalScoreMidRound(1)
+
+orderTotalScores = {k: v for k, v in sorted(totalScores.items(), key=lambda item: item[1], reverse=True)}
+
+print("Total Scores")
+for name  in orderTotalScores:
+    print(name, ":",  orderTotalScores[name])
