@@ -41,6 +41,33 @@ class GridRivalClient:
         cardData = self.connect.post(url, payload)
 
         data['sports'] = cardData['sports']['F1'] #adding in extra data from other call
+        data['leagueData'] = cardData['league']['teams']
 
         print("success")
+        return data
+    
+    def getPlayerData(self, playerId, stageId):
+
+        url = "v1/myleagues/performance"
+
+        payload = {
+            "team_eid":playerId,
+            "stage_eid":stageId
+        }
+
+        data = self.connect.post(url, payload)
+
+        return data
+    
+    def getTotalPlayerData(self, playerId):
+
+        url = "v1/myleagues/performance"
+
+        payload = {
+            "team_eid":playerId,
+            "stage_path":"F1/23/01"
+        }
+
+        data = self.connect.post(url, payload)
+
         return data

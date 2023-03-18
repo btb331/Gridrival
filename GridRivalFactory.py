@@ -1,8 +1,10 @@
 from inc.http.GridRivalClient import GridRivalClient
 from inc.Factories.DriverFactory import DriverFactory
 from inc.Factories.TeamFactory import TeamFactory
+from inc.Factories.playerFactory import PlayerFactory
 from inc.Drivers import Drivers
 from inc.Teams import Teams
+from inc.League import League
 from GridRival import GridRival
 
 class GridRivalFactory:
@@ -12,8 +14,10 @@ class GridRivalFactory:
         self.client = client
         self.drivers: Drivers = Drivers()
         self.teams: Teams = Teams()
+        self.league: League = League()
+
         self.raceIds = []
-        self.nextRaceIndex:int
+        self.nextRaceId:int
         pass
 
     def load(self)->None:
@@ -21,6 +25,7 @@ class GridRivalFactory:
         self.processRaces(gameData['sports']['event_map'])
         self.processDriverData(gameData['elements'])
         self.processTeamData(gameData['teamData'])
+        self.processLeagueData(gameData['leagueData'])
     
     def processDriverData(self, data:dict):
         print("processing drivers...")
@@ -36,19 +41,32 @@ class GridRivalFactory:
         for race in data:
             self.raceIds.append(race['stage_eid'])
             if race['completed'] is False and foundNext is False:
-                self.nextRaceIndex = race['stage_eid']
+                self.nextRaceId = race['stage_eid']
                 foundNext = True
         print("success")
 
     def processTeamData(self, data):
-        print("processing drivers...")
+        print("processing teams...")
         for team in data:
             teamFactory = TeamFactory(team)
             team = teamFactory.team
             self.teams.addTeam(team)
-        print("success")    
+        print("success")
+    
+    def processLeagueData(self, data):
+        print("processing player data...")
+        for player in data:
+            playerId = player['eid']
+            print("Processing player: ", playerId)
+            stagePlayerData = self.client.getPlayerData(playerId, self.nextRaceId)
+            totalPlayerData = self.client.getTotalPlayerData(playerId)
+            data = {"stage": stagePlayerData, "total": totalPlayerData, "info":player}
+            playerFactory = PlayerFactory(data , self.drivers, self.teams, playerId)
+            player = playerFactory.player
+            self.league.addPlayer(player)
+        print("success")
 
     
 
     def getGridRival(self):
-        return GridRival(self.drivers, self.teams, self.raceIds, self.nextRaceIndex)
+        return GridRival(self.drivers, self.teams, self.league, self.raceIds, self.nextRaceId)
