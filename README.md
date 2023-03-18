@@ -2,4 +2,16 @@ Gridrival scripts
 
 To work out which teams are top without having to wait until the end of the week
 
-Start a virtual enviroment to run the scripts
+Create a virtual evniroment "python -m venv venv"
+
+load the virtual enviroment "venv\Scripts\activate"
+
+Install dependices "pip instal -r requirements.txt"
+
+Create login file "login.json" as follows :
+{
+    "username": "XXX",
+    "password": "XXX"
+}
+
+run runner.py
